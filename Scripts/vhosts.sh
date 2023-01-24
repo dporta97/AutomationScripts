@@ -9,9 +9,19 @@
 # $serv        - domain without tld
 # $cname        - cname of webserver
 
+#Colours
+green="\e[0;32m\033[1m"
+end="\033[0m\e[0m"
+red="\e[0;31m\033[1m"
+blue="\e[0;34m\033[1m"
+yellow="\e[0;33m\033[1m"
+purple="\e[0;35m\033[1m"
+cyan="\e[0;36m\033[1m"
+gray="\e[0;37m\033[1m"
+
 # Check if you execute the script as root user
 if [ "$(whoami)" != 'root' ]; then
-echo "You have to execute this script as root user"
+echo -e "${red}You have to execute this script as root user${end}"
 exit 1;
 fi
 
@@ -25,15 +35,15 @@ usr="${srv%.*}"
 
 # This will check if directory already exists
 if ! mkdir -p $dir$cname_$servn; then
-echo "Web directory already Exist !"
+echo -e "${yellow}Web directory already Exist !${end}"
 else
-echo "Web directory created sucessfully !"
+echo -e "${green}Web directory created sucessfully !${end}"
 fi
 
 #Create user and group
 adduser $usr
 addgroup $usr
-echo "User and group created sucessfully!"
+echo -e "${green}User and group created sucessfully!${end}"
 
 chown -R $usr:$usr $dir
 chmod -R '755' $dir
@@ -60,9 +70,9 @@ Require all granted
 </Directory>
 </VirtualHost>" > /etc/apache2/sites-available/$servn.conf
 if ! echo -e /etc/apache2/sites-available/$servn.conf; then
-echo "Virtual host wasn't created !"
+echo -e " ${red}Virtual host wasn't created !${end}"
 else
-echo "Virtual host created !"
+echo "${green}Virtual host created !${end}"
 a2ensite $servn.conf
 fi
 
@@ -74,5 +84,5 @@ systemctl restart apache2
 fi
 
 echo "======================================"
-echo "All works done!The website is available at http://$servn"
+echo -e " ${green}All works done!The website is available at http://$servn${end}"
 echo "======================================"
